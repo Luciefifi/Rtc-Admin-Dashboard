@@ -1,13 +1,66 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaRegTrashCan } from "react-icons/fa6";
-import { MdAdd } from "react-icons/md";
+import {
+  MdAdd,
+  MdOutlineKeyboardArrowLeft,
+  MdOutlineKeyboardArrowRight,
+} from "react-icons/md";
 import { IoSearchOutline } from "react-icons/io5";
-import { IoIosArrowDown } from "react-icons/io";
+import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { dummyCoffeeData } from "../../data";
 
 export const Inventory = () => {
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [startIndex, setStartIndex] = useState(0);
+  const [endIndex, setEndIndex] = useState(1);
+  const [manufacturers, setManufacturers] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [data, setData] = useState([]);
+
+  const [pageLimit, setPageLimit] = useState(10);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 0) setCurrentPage(currentPage - 1);
+  };
+
+  const handleJumplast = () => {
+    setCurrentPage(totalPages);
+  };
+
+  const handleJumpFirst = () => {
+    setCurrentPage(1);
+  };
+
+  useEffect(() => {
+    let pages = Math.ceil(dummyCoffeeData.length / pageLimit);
+    setTotalPages(pages);
+
+    let newStartIndex = (currentPage - 1) * pageLimit;
+    setStartIndex(newStartIndex);
+    setEndIndex(newStartIndex + pageLimit);
+  }, [currentPage, totalPages]);
+
+  useEffect(() => {
+    setData([]);
+    setData(dummyCoffeeData.slice(startIndex, endIndex));
+    console.log(`start: ${startIndex}, end: ${endIndex}`);
+  }, [startIndex, endIndex]);
+
+  useEffect(() => {
+    for (const item of dummyCoffeeData) {
+      setManufacturers((prevState) => [...prevState, item.manufacturer]);
+      setCategories((prevState) => [...prevState, item.category]);
+    }
+  }, []);
+
   return (
-    <div className=" flex flex-col gap-2 divide-y-2 divide-light-blue-400 w-full h-full p-2">
+    <div className=" flex flex-col gap-2 divide-y-2 divide-light-blue-400 w-full h-full p-2 overflow-x-hidden overflow-y-auto">
       <div className="flex flex-row justify-between w-full">
         <label className=" font-semibold text-xl text-brown">
           Inventory List
@@ -36,6 +89,7 @@ export const Inventory = () => {
             </label>
             <input
               type="text"
+              name="productName"
               placeholder="Search"
               className="py-2 pl-10 pr-4 w-44 h-9 text-textGrey border border-gray-300 focus:outline-none focus:border-brown placeholder:text-sm"
             />
@@ -49,8 +103,14 @@ export const Inventory = () => {
             <label className=" text-textGrey text-sm font-semibold">
               Manufacturer:
             </label>
-            <select className="py-1 px-2 pr-4 w-44 h-9 text-textGrey border border-gray-300 focus:outline-none focus:border-brown placeholder:text-sm">
+            <select
+              name="manufacturer"
+              className="py-1 px-2 pr-4 w-44 h-9 text-textGrey border border-gray-300 focus:outline-none focus:border-brown placeholder:text-sm"
+            >
               <option></option>
+              {manufacturers.map((item, index) => (
+                <option key={index}>{item}</option>
+              ))}
             </select>
           </div>
 
@@ -61,6 +121,7 @@ export const Inventory = () => {
             </label>
             <input
               type="text"
+              name="itemNumber"
               placeholder="Search"
               className="py-2 pl-10 pr-4 w-44 h-9 text-textGrey border border-gray-300 focus:outline-none focus:border-brown placeholder:text-sm"
             />
@@ -74,18 +135,14 @@ export const Inventory = () => {
             <label className=" text-textGrey text-sm font-semibold">
               Category:
             </label>
-            <select className="py-1 px-2 pr-4 w-44 h-9 text-textGrey border border-gray-300 focus:outline-none focus:border-brown placeholder:text-sm">
+            <select
+              name="category"
+              className="py-1 px-2 pr-4 w-44 h-9 text-textGrey border border-gray-300 focus:outline-none focus:border-brown placeholder:text-sm"
+            >
               <option></option>
-            </select>
-          </div>
-
-          {/* problem condition */}
-          <div className="flex gap-1 flex-col">
-            <label className=" text-textGrey text-sm font-semibold">
-              Problem condition:
-            </label>
-            <select className="py-1 px-2 pr-4 w-44 h-9 text-textGrey border border-gray-300 focus:outline-none focus:border-brown placeholder:text-sm">
-              <option></option>
+              {categories.map((item, index) => (
+                <option key={index}>{item}</option>
+              ))}
             </select>
           </div>
 
@@ -130,53 +187,64 @@ export const Inventory = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className=" border-b-[1.8px]">
-              <td className="py-2 px-3 text-left">
-                <input type="checkbox" />
-              </td>
-              <td className="text-row py-2 px-3 text-left">Black coffee</td>
-              <td className="text-row py-2 px-3 text-left">
-                Kirehe Coffee ltd
-              </td>
-              <td className="text-row py-2 px-3 text-left">CFBLK01</td>
-              <td className="text-row py-2 px-3 text-left">Black coffee</td>
-              <td className="text-row py-2 px-3 text-left">N/A</td>
-              <td className="text-row py-2 px-3 text-left">500Kg</td>
-              <td className="text-row py-2 px-3 text-left">RWF 200</td>
-              <td className="text-row py-2 px-3 text-left">22/08/2028</td>
-            </tr>
-            <tr className=" border-b-[1.8px]">
-              <td className="py-2 px-3 text-left">
-                <input type="checkbox" />
-              </td>
-              <td className="text-row py-2 px-3 text-left">Black coffee</td>
-              <td className="text-row py-2 px-3 text-left">
-                Kirehe Coffee ltd
-              </td>
-              <td className="text-row py-2 px-3 text-left">CFBLK01</td>
-              <td className="text-row py-2 px-3 text-left">Black coffee</td>
-              <td className="text-row py-2 px-3 text-left">N/A</td>
-              <td className="text-row py-2 px-3 text-left">500Kg</td>
-              <td className="text-row py-2 px-3 text-left">RWF 200</td>
-              <td className="text-row py-2 px-3 text-left">22/08/2028</td>
-            </tr>
-            <tr className=" border-b-[1.8px]">
-              <td className="py-2 px-3 text-left">
-                <input type="checkbox" />
-              </td>
-              <td className="text-row py-2 px-3 text-left">Black coffee</td>
-              <td className="text-row py-2 px-3 text-left">
-                Kirehe Coffee ltd
-              </td>
-              <td className="text-row py-2 px-3 text-left">CFBLK01</td>
-              <td className="text-row py-2 px-3 text-left">Black coffee</td>
-              <td className="text-row py-2 px-3 text-left">N/A</td>
-              <td className="text-row py-2 px-3 text-left">500Kg</td>
-              <td className="text-row py-2 px-3 text-left">RWF 200</td>
-              <td className="text-row py-2 px-3 text-left">22/08/2028</td>
-            </tr>
+            {data.map((item) => (
+              <tr key={item.itemNumber} className=" border-b-[1.8px]">
+                <td className="py-2 px-3 text-left">
+                  <input type="checkbox" />
+                </td>
+                <td className="text-row py-2 px-3 text-left">
+                  {item.productName}
+                </td>
+                <td className="text-row py-2 px-3 text-left">
+                  {item.manufacturer}
+                </td>
+                <td className="text-row py-2 px-3 text-left">
+                  {item.itemNumber}
+                </td>
+                <td className="text-row py-2 px-3 text-left">
+                  {item.category}
+                </td>
+                <td className="text-row py-2 px-3 text-left">
+                  {item.problemCondition}
+                </td>
+                <td className="text-row py-2 px-3 text-left">
+                  {item.quantity}
+                </td>
+                <td className="text-row py-2 px-3 text-left">
+                  ${item.pricePerUnit}
+                </td>
+                <td className="text-row py-2 px-3 text-left">
+                  {item.expiryDate}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
+      </div>
+      <div className="flex flex-row gap-1 items-center w-full justify-center my-4">
+        <FaAngleDoubleLeft
+          onClick={handleJumpFirst}
+          size={20}
+          className="hover:cursor-pointer"
+        />
+        <MdOutlineKeyboardArrowLeft
+          size={20}
+          onClick={handlePrevPage}
+          className="hover:cursor-pointer"
+        />
+        <label>
+          {currentPage} of {totalPages}
+        </label>
+        <MdOutlineKeyboardArrowRight
+          onClick={handleNextPage}
+          className="hover:cursor-pointer"
+          size={20}
+        />
+        <FaAngleDoubleRight
+          onClick={handleJumplast}
+          size={20}
+          className="hover:cursor-pointer"
+        />
       </div>
     </div>
   );
