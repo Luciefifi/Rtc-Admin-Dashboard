@@ -51,13 +51,13 @@ export const Inventory = () => {
   const handleSearch = (e) => {
     e.preventDefault();
 
-    let query = searchParams;
+    let query = searchParams.toLowerCase();
     let results = [];
     results = data.filter((item) => {
       return (
         item.productName.toLowerCase().includes(query) ||
         item.category.toLowerCase().includes(query) ||
-        item.itemNumber.includes(query) ||
+        item.itemNumber.toLowerCase().includes(query) ||
         item.manufacturer.toLowerCase().includes(query)
       );
     });
