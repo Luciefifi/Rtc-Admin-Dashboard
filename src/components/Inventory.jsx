@@ -26,7 +26,6 @@ export const Inventory = () => {
 
   const [pageLimit, setPageLimit] = useState(10);
 
-  const activeLink = useSelector((state) => state.activeLinks.active);
   const dispatch = useDispatch();
 
   const handleNextPage = () => {
@@ -168,7 +167,7 @@ export const Inventory = () => {
                 Category
               </th>
               <th className="text-header text-sm py-2 px-3 text-left">
-                Problem
+                Problem/Condition
               </th>
               <th className="text-header text-sm py-2 px-3 text-left">
                 Quantity
