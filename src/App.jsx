@@ -7,7 +7,7 @@ const routes = [
   {
     path: "/",
     element: <DefaultLayout />,
-    children: [{ path: "/", element: <Inventory /> }],
+    children: [{ path: "/inventory", element: <Inventory /> }],
   },
 ];
 

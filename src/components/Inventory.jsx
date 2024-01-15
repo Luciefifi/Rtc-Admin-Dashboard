@@ -10,6 +10,8 @@ import { IoSearchOutline } from "react-icons/io5";
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { dummyCoffeeData } from "../../data";
+import { useDispatch, useSelector } from "react-redux";
+import { activeLinksActions } from "../redux/slices/activeLinksActive";
 
 export const Inventory = () => {
   const [totalPages, setTotalPages] = useState(0);
@@ -23,6 +25,9 @@ export const Inventory = () => {
   const [searchMode, setSetSearchMode] = useState(false);
 
   const [pageLimit, setPageLimit] = useState(10);
+
+  const activeLink = useSelector((state) => state.activeLinks.active);
+  const dispatch = useDispatch();
 
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
@@ -82,6 +87,7 @@ export const Inventory = () => {
   }, [startIndex, endIndex]);
 
   useEffect(() => {
+    dispatch(activeLinksActions.setActiveLink("inventory"));
     for (const item of dummyCoffeeData) {
       setManufacturers((prevState) => [...prevState, item.manufacturer]);
       setCategories((prevState) => [...prevState, item.category]);
