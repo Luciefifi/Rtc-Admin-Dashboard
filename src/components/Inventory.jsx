@@ -4,6 +4,7 @@ import {
   MdAdd,
   MdOutlineKeyboardArrowLeft,
   MdOutlineKeyboardArrowRight,
+  MdOutlineClear,
 } from "react-icons/md";
 import { IoSearchOutline } from "react-icons/io5";
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
@@ -18,6 +19,8 @@ export const Inventory = () => {
   const [manufacturers, setManufacturers] = useState([]);
   const [categories, setCategories] = useState([]);
   const [data, setData] = useState([]);
+  const [searchParams, setSearchParams] = useState("");
+  const [searchMode, setSetSearchMode] = useState(false);
 
   const [pageLimit, setPageLimit] = useState(10);
 
@@ -37,6 +40,33 @@ export const Inventory = () => {
     setCurrentPage(1);
   };
 
+  const handleInput = (e) => {
+    setSearchParams(e.target.value);
+  };
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    let query = searchParams;
+    let results = [];
+    results = data.filter((item) => {
+      return (
+        item.productName.toLowerCase().includes(query) ||
+        item.category.toLowerCase().includes(query) ||
+        item.itemNumber.includes(query) ||
+        item.manufacturer.toLowerCase().includes(query)
+      );
+    });
+
+    setData(results);
+    setSetSearchMode(true);
+  };
+
+  const handleClearSearch = () => {
+    setSearchParams("");
+    setData(dummyCoffeeData.slice(startIndex, endIndex));
+    setSetSearchMode(false);
+  };
+
   useEffect(() => {
     let pages = Math.ceil(dummyCoffeeData.length / pageLimit);
     setTotalPages(pages);
@@ -49,7 +79,6 @@ export const Inventory = () => {
   useEffect(() => {
     setData([]);
     setData(dummyCoffeeData.slice(startIndex, endIndex));
-    console.log(`start: ${startIndex}, end: ${endIndex}`);
   }, [startIndex, endIndex]);
 
   useEffect(() => {
@@ -82,73 +111,33 @@ export const Inventory = () => {
       {/* filter */}
       <div className="flex py-4">
         <form className=" flex flex-row gap-4">
-          {/* product name */}
+          {/* search */}
           <div className="relative flex gap-1 flex-col">
-            <label className=" text-textGrey text-sm font-semibold">
-              Product name:
-            </label>
             <input
               type="text"
-              name="productName"
+              name="search"
               placeholder="Search"
-              className="py-2 pl-10 pr-4 w-44 h-9 text-textGrey border border-gray-300 focus:outline-none focus:border-brown placeholder:text-sm"
+              onChange={handleInput}
+              value={searchParams}
+              className="py-2 pl-10 pr-4 w-60 h-9 text-textGrey border border-gray-300 focus:outline-none focus:border-brown placeholder:text-sm"
             />
-            <div className="absolute inset-y-0 top-6 left-0 pl-3 flex items-center pointer-events-none">
+            <div className="absolute inset-y-0 top-1 left-0 pl-3 flex items-center pointer-events-none">
               <IoSearchOutline className=" text-gray-300" />
             </div>
-          </div>
-
-          {/* manufacturer */}
-          <div className="flex gap-1 flex-col">
-            <label className=" text-textGrey text-sm font-semibold">
-              Manufacturer:
-            </label>
-            <select
-              name="manufacturer"
-              className="py-1 px-2 pr-4 w-44 h-9 text-textGrey border border-gray-300 focus:outline-none focus:border-brown placeholder:text-sm"
+            <div
+              onClick={handleClearSearch}
+              className="absolute inset-y-0 top-1 right-0 pr-3 flex items-center cursor-pointer"
             >
-              <option></option>
-              {manufacturers.map((item, index) => (
-                <option key={index}>{item}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* item number */}
-          <div className="relative flex gap-1 flex-col">
-            <label className=" text-textGrey text-sm font-semibold">
-              Item number:
-            </label>
-            <input
-              type="text"
-              name="itemNumber"
-              placeholder="Search"
-              className="py-2 pl-10 pr-4 w-44 h-9 text-textGrey border border-gray-300 focus:outline-none focus:border-brown placeholder:text-sm"
-            />
-            <div className="absolute inset-y-0 top-6 left-0 pl-3 flex items-center pointer-events-none">
-              <IoSearchOutline className=" text-gray-300" />
+              <MdOutlineClear className=" text-gray-300" />
             </div>
-          </div>
-
-          {/* category */}
-          <div className="flex gap-1 flex-col">
-            <label className=" text-textGrey text-sm font-semibold">
-              Category:
-            </label>
-            <select
-              name="category"
-              className="py-1 px-2 pr-4 w-44 h-9 text-textGrey border border-gray-300 focus:outline-none focus:border-brown placeholder:text-sm"
-            >
-              <option></option>
-              {categories.map((item, index) => (
-                <option key={index}>{item}</option>
-              ))}
-            </select>
           </div>
 
           <div className="flex h-full items-end">
-            <button className="flex justify-center items-center w-44 h-8 bg-brown text-white text-sm">
-              Apply filter
+            <button
+              onClick={handleSearch}
+              className="flex justify-center items-center w-32 h-8 bg-brown text-white text-sm"
+            >
+              Search
             </button>
           </div>
         </form>
@@ -221,31 +210,35 @@ export const Inventory = () => {
           </tbody>
         </table>
       </div>
-      <div className="flex flex-row gap-1 items-center w-full justify-center my-4">
-        <FaAngleDoubleLeft
-          onClick={handleJumpFirst}
-          size={20}
-          className="hover:cursor-pointer"
-        />
-        <MdOutlineKeyboardArrowLeft
-          size={20}
-          onClick={handlePrevPage}
-          className="hover:cursor-pointer"
-        />
-        <label>
-          {currentPage} of {totalPages}
-        </label>
-        <MdOutlineKeyboardArrowRight
-          onClick={handleNextPage}
-          className="hover:cursor-pointer"
-          size={20}
-        />
-        <FaAngleDoubleRight
-          onClick={handleJumplast}
-          size={20}
-          className="hover:cursor-pointer"
-        />
-      </div>
+
+      {/* pagination */}
+      {!searchMode && (
+        <div className="flex flex-row gap-1 items-center w-full justify-center my-4">
+          <FaAngleDoubleLeft
+            onClick={handleJumpFirst}
+            size={20}
+            className="hover:cursor-pointer"
+          />
+          <MdOutlineKeyboardArrowLeft
+            size={20}
+            onClick={handlePrevPage}
+            className="hover:cursor-pointer"
+          />
+          <label>
+            {currentPage} of {totalPages}
+          </label>
+          <MdOutlineKeyboardArrowRight
+            onClick={handleNextPage}
+            className="hover:cursor-pointer"
+            size={20}
+          />
+          <FaAngleDoubleRight
+            onClick={handleJumplast}
+            size={20}
+            className="hover:cursor-pointer"
+          />
+        </div>
+      )}
     </div>
   );
 };

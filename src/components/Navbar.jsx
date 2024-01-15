@@ -1,7 +1,6 @@
 import React from "react";
 import logo_IMG from "../assets/logo.jpg";
 import { Link } from "react-router-dom";
-import { HiMiniBars3 } from "react-icons/hi2";
 
 export const NavBar = () => {
   return (
