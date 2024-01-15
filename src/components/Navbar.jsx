@@ -1,24 +1,55 @@
 import React from "react";
 import logo_IMG from "../assets/logo.jpg";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { activeLinksActions } from "../redux/slices/activeLinksActive";
 
 export const NavBar = () => {
+  const activeLink = useSelector((state) => state.activeLinks.active);
+  const dispatch = useDispatch();
+
   return (
     <div className="flex flex-row w-screen h-14 bg-navbg">
-      <div className="flex items-center h-full w-14">
+      <div className="flex items-center h-full w-[54px] overflow-hidden">
         <img src={logo_IMG} alt="logo" />
       </div>
       <div className="flex flex-row flex-1 justify-center items-center">
-        <Link className=" flex flex-col justify-center items-center h-full px-2 text-navNotActive hover:text-navActive hover:font-semibold">
+        <Link
+          to={"/orders"}
+          onClick={() => dispatch(activeLinksActions.setActiveLink("orders"))}
+          className={`flex flex-col justify-center items-center h-full px-2 text-navNotActive hover:text-navActive hover:font-semibold ${
+            activeLink === "orders" ? "border-lineActive" : ""
+          }`}
+        >
           <label>Orders</label>
         </Link>
-        <Link className=" flex flex-col justify-center items-center h-full px-2 border-b-4 border-lineActive text-navNotActive hover:text-navActive hover:font-semibold">
+        <Link
+          to={"/inventory"}
+          onClick={() =>
+            dispatch(activeLinksActions.setActiveLink("inventory"))
+          }
+          className={`flex flex-col justify-center items-center h-full px-2 border-b-4 text-navNotActive hover:text-navActive hover:font-semibold ${
+            activeLink === "inventory" ? "border-lineActive" : ""
+          }`}
+        >
           <label>Inventory</label>
         </Link>
-        <Link className=" flex flex-col justify-center items-center h-full px-2 text-navNotActive hover:text-navActive hover:font-semibold">
+        <Link
+          onClick={() =>
+            dispatch(activeLinksActions.setActiveLink("reports"))
+          }
+          className={`flex flex-col justify-center items-center h-full px-2 text-navNotActive hover:text-navActive hover:font-semibold ${
+            activeLink === "reports" ? "border-lineActive" : ""
+          }`}
+        >
           <label>Reports</label>
         </Link>
-        <Link className=" flex flex-col justify-center items-center h-full px-2 text-navNotActive hover:text-navActive hover:font-semibold">
+        <Link
+          onClick={() => dispatch(activeLinksActions.setActiveLink("settings"))}
+          className={`flex flex-col justify-center items-center h-full px-2 text-navNotActive hover:text-navActive hover:font-semibold ${
+            activeLink === "settings" ? "border-lineActive" : ""
+          }`}
+        >
           <label>Settings</label>
         </Link>
       </div>
