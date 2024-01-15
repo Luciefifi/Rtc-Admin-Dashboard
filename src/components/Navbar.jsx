@@ -18,7 +18,9 @@ export const NavBar = () => {
           to={"/orders"}
           onClick={() => dispatch(activeLinksActions.setActiveLink("orders"))}
           className={`flex flex-col justify-center items-center h-full px-2 text-navNotActive hover:text-navActive hover:font-semibold ${
-            activeLink === "orders" ? "border-lineActive" : ""
+            activeLink === "orders"
+              ? " font-bold border-b-4 border-lineActive"
+              : "border-0"
           }`}
         >
           <label>Orders</label>
@@ -28,18 +30,20 @@ export const NavBar = () => {
           onClick={() =>
             dispatch(activeLinksActions.setActiveLink("inventory"))
           }
-          className={`flex flex-col justify-center items-center h-full px-2 border-b-4 text-navNotActive hover:text-navActive hover:font-semibold ${
-            activeLink === "inventory" ? "border-lineActive" : ""
+          className={`flex flex-col justify-center items-center h-full px-2 text-navNotActive hover:text-navActive hover:font-semibold ${
+            activeLink === "inventory"
+              ? "font-bold border-b-4 border-lineActive"
+              : "border-0"
           }`}
         >
           <label>Inventory</label>
         </Link>
         <Link
-          onClick={() =>
-            dispatch(activeLinksActions.setActiveLink("reports"))
-          }
+          onClick={() => dispatch(activeLinksActions.setActiveLink("reports"))}
           className={`flex flex-col justify-center items-center h-full px-2 text-navNotActive hover:text-navActive hover:font-semibold ${
-            activeLink === "reports" ? "border-lineActive" : ""
+            activeLink === "reports"
+              ? "font-bold border-b-4 border-lineActive"
+              : "border-0"
           }`}
         >
           <label>Reports</label>
@@ -47,7 +51,9 @@ export const NavBar = () => {
         <Link
           onClick={() => dispatch(activeLinksActions.setActiveLink("settings"))}
           className={`flex flex-col justify-center items-center h-full px-2 text-navNotActive hover:text-navActive hover:font-semibold ${
-            activeLink === "settings" ? "border-lineActive" : ""
+            activeLink === "settings"
+              ? "font-bold border-b-4 border-lineActive"
+              : "border-0"
           }`}
         >
           <label>Settings</label>
