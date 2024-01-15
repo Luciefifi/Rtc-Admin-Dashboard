@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { Inventory } from "./components/Inventory";
+import Orders from "./components/Orders";
 import DefaultLayout from "./layouts/DefaultLayout";
-import { Orders } from "./components/Orders";
 
 const routes = [
   {
@@ -12,6 +12,11 @@ const routes = [
       { path: "/inventory", element: <Inventory /> },
       { path: "/orders", element: <Orders /> },
     ],
+  },
+  {
+    path: "/orders",
+    element: <DefaultLayout />,
+    children: [{ path: "/orders", element: <Orders /> }],
   },
 ];
 
