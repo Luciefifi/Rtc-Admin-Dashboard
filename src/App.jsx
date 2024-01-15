@@ -3,7 +3,6 @@ import "./App.css";
 import { Inventory } from "./components/Inventory";
 import Orders from "./components/Orders";
 import DefaultLayout from "./layouts/DefaultLayout";
-import { Orders } from "./components/Orders";
 
 const routes = [
   {

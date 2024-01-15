@@ -219,7 +219,7 @@ export const Inventory = () => {
 
       {/* pagination */}
       {!searchMode && (
-        <div className="flex flex-row gap-1 items-center w-full justify-center my-4">
+        <div className="flex flex-row gap-1 items-center w-full justify-center my-4 mb-16">
           <FaAngleDoubleLeft
             onClick={handleJumpFirst}
             size={20}
